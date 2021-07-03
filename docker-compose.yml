@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  keygenerator:
+    build:
+      context: ./tvencryption.keygenerator
+      dockerfile: ./docker/Dockerfile
+      target: prod
+    image: keygenerator_local
+    restart: always
+    environment:
+      - CHANNEL_NAME
+      - KMS_URL
+      - KMS_TOKEN
+      - KEY_URI
+      - OUTPUT_DIR
+      - QUEUE_PATH
+      - EXPIRE_TIME=${EXPIRE_TIME:-168}
+      - SCHEDULE_GENERATE=${SCHEDULE_GENERATE:-0 * * * *}
+      - SCHEDULE_QUEUE=${SCHEDULE_QUEUE:-*/5 * * * *}
+    volumes:
+      - ${OUTPUT_DIR}:/srv/keys
+      - ${QUEUE_PATH}:/srv/queues
